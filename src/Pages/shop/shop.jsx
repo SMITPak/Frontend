@@ -1,17 +1,20 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
-import { ProductCard } from "../../Components/Card/products";
 import apiRequest from "../../config/api";
 import PaginationUI from "../../Components/SubComponents/pagination";
+import { ProductCard } from "../../Components/Card/products";
 
-export default function Home() {
+export default function Shop() {
+  const [isLoading, setIsLoading] = useState(false);
   const [products, setProducts] = useState([]);
+  const [category, setCategory] = useState([]);
+  const [selectCategory, setSelectCategory] = useState();
   const [pagination, setPagination] = useState();
   const [page, setPage] = useState(1);
-  const [isLoading, setIsLoading] = useState(false);
-  const HandleApi = async () => {
+  const fetchProducts = () => {
     apiRequest({
-      endpoint: `/products?page=${page}`,
+      endpoint: `/products?page=${page}${
+        selectCategory && `&category=${selectCategory}`
+      }`,
       setLoading: setIsLoading,
       onSuccess: (data) => {
         setProducts(data.products);
@@ -22,11 +25,38 @@ export default function Home() {
       },
     });
   };
+  const fetchCategory = () => {
+    apiRequest({
+      endpoint: `/products/category`,
+      setLoading: setIsLoading,
+      onSuccess: (data) => {
+        setCategory(data.products);
+      },
+      onError: (err) => {
+        console.log(err);
+      },
+    });
+  };
   useEffect(() => {
-    HandleApi();
-  }, [page]);
+    fetchProducts();
+  }, [page, selectCategory]);
+  useEffect(() => {
+    fetchCategory();
+  }, []);
   return (
     <>
+      <div className="flex gap-4 my-8 flex-wrap items-center justify-center">
+        {category.map((v) => (
+          <p
+            onClick={(e) => setSelectCategory(e.target.innerHTML)}
+            className={`p-4 flex gap-4 cursor-pointer  items-center justify-center ${
+              v == selectCategory ? "bg-green-200" : "bg-green-50"
+            } rounded-md`}
+          >
+            {v}
+          </p>
+        ))}
+      </div>
       {isLoading ? (
         <div role="status" className="flex justify-center mt-6">
           <svg
@@ -64,7 +94,9 @@ export default function Home() {
           ))}
         </div>
       )}
-      <PaginationUI pagination={pagination} setPage={setPage} />
+      {pagination?.totalPage > 1 && (
+        <PaginationUI pagination={pagination} setPage={setPage} />
+      )}
     </>
   );
 }
