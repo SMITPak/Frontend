@@ -1,4 +1,6 @@
-export const SaveToLocal = (id) => {
+import { addCart } from "../Redux/countCart";
+
+export function SaveToLocal(id, dispatch){
   let carts = JSON.parse(localStorage.getItem("Cart"));
   if (carts) {
     const find = carts.findIndex((v) => v.id == id);
@@ -12,5 +14,6 @@ export const SaveToLocal = (id) => {
       },
     ];
   }
+  dispatch(addCart());
   localStorage.setItem("Cart", JSON.stringify(carts));
 };

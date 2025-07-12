@@ -12,8 +12,10 @@ import {
 } from "flowbite-react";
 import { NavLink } from "react-router";
 import { MdOutlineShoppingCart } from "react-icons/md";
+import { useSelector } from "react-redux";
 
 export function NavbarComponent() {
+  const { value } = useSelector((e) => e.count);
   return (
     <Navbar className="!bg-green-800">
       <NavbarBrand href="https://flowbite-react.com">
@@ -27,7 +29,15 @@ export function NavbarComponent() {
         </span>
       </NavbarBrand>
       <div className="flex items-center gap-2 md:order-2">
-        <MdOutlineShoppingCart className="size-6 text-green-100 cursor-pointer "/>
+        <NavLink to={'/cart'} className="relative">
+          <MdOutlineShoppingCart className="size-8 text-green-100 cursor-pointer " />
+          {value > 0 && (
+            <p className="absolute -top-2 right-0 bg-white rounded-full leading-none p-0.5">
+              {value}
+            </p>
+          )}
+        </NavLink>
+
         <Dropdown
           arrowIcon={false}
           inline
@@ -39,7 +49,6 @@ export function NavbarComponent() {
             />
           }
         >
-          
           <DropdownHeader>
             <span className="block text-sm">Bonnie Green</span>
             <span className="block truncate text-sm font-medium">
