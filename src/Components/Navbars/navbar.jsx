@@ -13,6 +13,7 @@ import {
 import { NavLink } from "react-router";
 import { MdOutlineShoppingCart } from "react-icons/md";
 import { useSelector } from "react-redux";
+import { AuthModal } from "../Modal/auth";
 
 export function NavbarComponent() {
   const { value } = useSelector((e) => e.count);
@@ -29,7 +30,7 @@ export function NavbarComponent() {
         </span>
       </NavbarBrand>
       <div className="flex items-center gap-2 md:order-2">
-        <NavLink to={'/cart'} className="relative">
+        <NavLink to={"/cart"} className="relative">
           <MdOutlineShoppingCart className="size-8 text-green-100 cursor-pointer " />
           {value > 0 && (
             <p className="absolute -top-2 right-0 bg-white rounded-full leading-none p-0.5">
@@ -37,8 +38,8 @@ export function NavbarComponent() {
             </p>
           )}
         </NavLink>
-
-        <Dropdown
+        <AuthModal />
+        {/* <Dropdown
           arrowIcon={false}
           inline
           label={
@@ -60,7 +61,7 @@ export function NavbarComponent() {
           <DropdownItem>Earnings</DropdownItem>
           <DropdownDivider />
           <DropdownItem>Sign out</DropdownItem>
-        </Dropdown>
+        </Dropdown> */}
         <NavbarToggle />
       </div>
       <NavbarCollapse>

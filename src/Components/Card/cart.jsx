@@ -10,7 +10,7 @@ export function CartCard({
   id,
 }) {
   return (
-    <Card className="w-full h-56 text-white">
+    <Card className="w-full lg:h-56 text-white">
       <div className="flex gap-4">
         <div>
           <img className="size-36" src={img} alt="" />
