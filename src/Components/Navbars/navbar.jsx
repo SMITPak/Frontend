@@ -12,11 +12,14 @@ import {
 } from "flowbite-react";
 import { NavLink } from "react-router";
 import { MdOutlineShoppingCart } from "react-icons/md";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { AuthModal } from "../Modal/auth";
+import { logout } from "../../Redux/authSlice";
 
 export function NavbarComponent() {
   const { value } = useSelector((e) => e.count);
+  const { user } = useSelector((state) => state?.reducer?.auth);
+  const dispatch = useDispatch();
   return (
     <Navbar className="!bg-green-800">
       <NavbarBrand href="https://flowbite-react.com">
@@ -38,30 +41,37 @@ export function NavbarComponent() {
             </p>
           )}
         </NavLink>
-        <AuthModal />
-        {/* <Dropdown
-          arrowIcon={false}
-          inline
-          label={
-            <Avatar
-              alt="User settings"
-              img="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
-              rounded
-            />
-          }
-        >
-          <DropdownHeader>
-            <span className="block text-sm">Bonnie Green</span>
-            <span className="block truncate text-sm font-medium">
-              name@flowbite.com
-            </span>
-          </DropdownHeader>
-          <DropdownItem>Dashboard</DropdownItem>
-          <DropdownItem>Settings</DropdownItem>
-          <DropdownItem>Earnings</DropdownItem>
-          <DropdownDivider />
-          <DropdownItem>Sign out</DropdownItem>
-        </Dropdown> */}
+        {user ? (
+          <Dropdown
+            arrowIcon={false}
+            inline
+            label={
+              <div className="flex flex-wrap gap-2">
+                <Avatar
+                  placeholderInitials={(user?.name).slice(0, 2)}
+                  rounded
+                />
+              </div>
+            }
+          >
+            <DropdownHeader>
+              <span className="block text-sm">{user?.name}</span>
+              <span className="block truncate text-sm font-medium">
+                {user?.email}
+              </span>
+            </DropdownHeader>
+            <DropdownItem><NavLink to={'/order'}>Your Orders</NavLink></DropdownItem>
+            <DropdownItem>Settings</DropdownItem>
+            <DropdownDivider />
+            <DropdownItem onClick={() => dispatch(logout())}>
+              Sign out
+            </DropdownItem>
+          </Dropdown>
+        ) : (
+          <AuthModal />
+        )}
+
+        {/*  */}
         <NavbarToggle />
       </div>
       <NavbarCollapse>
