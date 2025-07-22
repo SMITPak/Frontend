@@ -22,7 +22,7 @@ const apiRequest = async ({
       url: `${BASE_URL}${endpoint}`,
       params,
       data,
-      headers: token ? { Authorization: `Bearer ${token}` } : "",
+      headers: token && { Authorization: `Bearer ${token}` },
     });
     onSuccess(response.data);
   } catch (err) {
