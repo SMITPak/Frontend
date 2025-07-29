@@ -1,8 +1,12 @@
 import { useState, useRef, useEffect } from "react";
 import { FiMessageCircle } from "react-icons/fi";
+import { useSocket } from "../../config/socket";
+import { useSelector } from "react-redux";
 
 export default function ChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
+    const { user } = useSelector((state) => state?.reducer?.auth);
+  const { socket } = useSocket(user._id, "6888a2cfa9fabf7feae6e39c");
   const [messages, setMessages] = useState([
     { from: "admin", text: "Hi! How can I help you today?" },
   ]);
@@ -17,7 +21,8 @@ export default function ChatWidget() {
     if (!input.trim()) return;
 
     // Emit message
-
+    console.log(input)
+    socket.emit("send-message", input);
     // Add user message to local state
     setMessages((prev) => [...prev, { from: "user", text: input }]);
     setInput("");
@@ -27,6 +32,9 @@ export default function ChatWidget() {
     scrollToBottom();
   }, [messages]);
 
+  useEffect(()=> {
+    socket.on('reply', (data)=> console.log(data))
+  }, [socket])
   return (
     <>
       <div
