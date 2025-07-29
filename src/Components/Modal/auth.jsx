@@ -12,13 +12,14 @@ import apiRequest from "../../config/api";
 import { useDispatch, useSelector } from "react-redux";
 import { setCredentials } from "../../Redux/authSlice";
 import { openModal } from '../../Redux/countCart'
+import { useNavigate } from "react-router";
 
 export function AuthModal() {
   const dispatch = useDispatch();
   const { open } = useSelector((state) => state.count)
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState("signin");
-
+  const navigate = useNavigate()
   // Sign In state
   const [username, setUserName] = useState("");
   const [signInEmail, setSignInEmail] = useState("");
@@ -56,6 +57,9 @@ export function AuthModal() {
             user,
           })
         );
+        if (data.user.role == 'Admin'){
+          navigate('/admin')
+        }
         dispatch(openModal(false));
       },
       onError: (err) => {
